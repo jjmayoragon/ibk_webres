@@ -1,0 +1,223 @@
+@font-face {
+  font-family: 'opensans';
+  src: url('/WebResources/axx_/Fonts/opensans-regular-webfont.woff2') format('woff2'),
+       url('/WebResources/axx_/Fonts/opensans-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'opensans';
+  src: url('/WebResources/axx_/Fonts/opensans-bold-webfont.woff2') format('woff2'),
+       url('/WebResources/axx_/Fonts/opensans-bold-webfont.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: optional;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "opensans", Arial, Helvetica, sans-serif;
+  background: transparent;
+  color: #333;
+  line-height: 1.1;
+  display: block;
+}
+
+
+
+.container {
+  width: 90%;
+  max-width: 1000px !important;
+  margin: 15px auto;
+
+  display: grid;
+  grid-gap: 20px;
+
+  grid-template-columns: repeat(1, 1fr);
+  grid-template-rows: repeat(3, auto);
+
+  grid-template-areas:
+    "headerArea"
+    "ordersAreaArea"
+    "footerArea";
+}
+
+
+
+.contenedorPanel.table-responsive-md.panel {
+  display: grid;
+  max-width: 990px;
+  width: 90%;
+  align-self: center;
+  padding-right: 25px;
+  padding-left: 25px;
+
+  grid-gap: 20px;
+
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(4, auto);
+
+  grid-template-areas:
+    "areaTable areaTable";
+}
+
+.container > div,
+.container > main,
+.container > header,
+.container > main,
+.container > aside,
+.container > footer {
+padding: 20px;
+border-radius: 4px;
+color: #446278;
+}
+
+
+.container .header {
+  border: none;
+  grid-area: headerArea;
+  padding: 0px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  text-align: center;
+
+}
+
+
+.areaTable{
+text-align: center;
+display: flex;
+flex-flow: column;
+transition: 0.4s;
+}
+
+#ordersAreaContainer {
+background: linear-gradient(to right, #ba6df6,#8b64db);
+border-radius: 4px;
+display: flex;
+flex-direction: column;
+justify-content: space-evenly;
+}
+
+
+
+.areaTable {
+  grid-area: areaTable;
+}
+
+.container .footer {
+  grid-area: footerArea;
+  background-color: transparent;
+  color: #446278;
+  border: none;
+  text-align: center;
+  display: flex;
+  flex-flow: column;
+  
+}
+
+
+/*Botón para abrir caso*/
+.nuevoCase {
+  display: grid;
+  border-radius: 3px;
+}
+
+
+/* TARJETAS */
+/* Style the counter cards */
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  height: auto;
+  min-height: 0px;
+  margin-bottom: 20px;
+
+  text-align: left;
+  background-color:white;
+  border-radius: 4px;
+
+  
+}
+
+.rowOrdersCard {
+  font-size: 1.1rem;
+  text-align: center;
+  display: flex;
+  padding: 5px;
+  justify-content: space-evenly;
+}
+
+
+
+/* DROPDOWN BUTTON */
+.dropbtn {
+  background-color: #9165dd;
+  padding: 5px 10px;
+  height: auto;
+  border: none;
+  border-radius: 10px;
+  margin-left:10px;
+  justify-self: flex-start;
+  
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+  
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  
+  top:-0px;
+  left:15px;
+
+  background-color: #fff;
+  min-width: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 7px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: #333;
+  padding: 5px 10px;
+  text-decoration: none;
+  font-size: small;
+  border-radius: 10px;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #ba6df6;
+  color: #333;
+  border-radius: 10px;
+  cursor: hand;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+  background-color: #fff;
+  border-radius: 10px;
+}
+
