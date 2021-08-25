@@ -2,6 +2,7 @@
 var api;
 let contactsArray = [];
 var _id;
+var newPhoneCallGuid;
 
 
 document.onreadystatechange = function () {  
@@ -206,13 +207,13 @@ function LoadEventListeners() {
   for (j = 0; j < navigateToCase.length; j++) {
     navigateToCase[j].addEventListener("click", () => {
       
-      let _guid = event.target.parentElement
+      let contactGuid = event.target.parentElement
                             .parentElement
                             .parentElement
                             .previousElementSibling
                             .innerHTML;
          
-      openContactForm(_guid);
+      openContactForm(contactGuid);
     });
   }
 }
@@ -222,8 +223,12 @@ function LoadEventListeners() {
 
 
 //ABRIR CONTACT CON GUID ESPECIFICO
-function openContactForm(_guid) {
-    //AppId
+function openContactForm(contactGuid) {
+
+  createPhoneCall(contactGuid);
+  asociateContactWithPhoneCall(contactGuid,newPhoneCallGuid);
+
+  //AppId
     let appid = "f848d9fd-f218-ea11-a812-000d3ac1779c";
 
     //Form ID  de Contacto "Vista 360"
@@ -235,7 +240,7 @@ function openContactForm(_guid) {
 &newWindow=false
 &pagetype=entityrecord
 &etn=contact
-&id=${_guid}
+&id=${contactGuid}
 &formid=${formid}
 `;
     
@@ -245,13 +250,58 @@ function openContactForm(_guid) {
 
 
 
+//CREATE PHONE CALL AND RELATED TO CONTACT
+function createPhoneCall(contactGuid){
+  //Api creada por CRM Rest Builder
+var entity = {};
+entity.subject = "Call Center";
+//entity.directioncode = true;
+//entity["regardingobjectid@odata.bind"] = `/contacts(${contactGuid})`;
+
+var req = new XMLHttpRequest();
+req.open("POST", Xrm.Page.context.getClientUrl() + "/api/data/v9.1/phonecalls", false);
+req.setRequestHeader("OData-MaxVersion", "4.0");
+req.setRequestHeader("OData-Version", "4.0");
+req.setRequestHeader("Accept", "application/json");
+req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+req.onreadystatechange = function() {
+    if (this.readyState === 4) {
+        req.onreadystatechange = null;
+        if (this.status === 204) {
+            var uri = this.getResponseHeader("OData-EntityId");
+            var regExp = /\(([^)]+)\)/;
+            var matches = regExp.exec(uri);
+            newPhoneCallGuid = matches[1];
+            console.log("PhoneCall created successfully");
+        } else {
+          console.log(this.statusText);
+        }
+    }
+};
+req.send(JSON.stringify(entity));
+}
 
 
+//Api creada por CRM REst Builder
+function asociateContactWithPhoneCall(contactGuid, phoneCallGuid){
+  var association = {"@odata.id": Xrm.Page.context.getClientUrl() + `/api/data/v9.1/phonecalls(${phoneCallGuid})`};
 
-
-
-
-
-
-
-
+var req = new XMLHttpRequest();
+req.open("POST", Xrm.Page.context.getClientUrl() + `/api/data/v9.1/contacts(${contactGuid})/Contact_Phonecalls/$ref`, false);
+req.setRequestHeader("Accept", "application/json");
+req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+req.setRequestHeader("OData-MaxVersion", "4.0");
+req.setRequestHeader("OData-Version", "4.0");
+req.onreadystatechange = function() {
+    if (this.readyState === 4) {
+        req.onreadystatechange = null;
+        if (this.status === 204 || this.status === 1223) {
+            //Success - No Return Data - Do Something
+            console.log("Relationship between PhoneCall and Contact created successfully");
+        } else {
+            console.log(this.statusText);
+        }
+    }
+};
+req.send(JSON.stringify(association));
+}
