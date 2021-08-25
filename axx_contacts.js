@@ -10,12 +10,18 @@ document.onreadystatechange = function () {
 
      getContactsFromApi(_id);
 
-     loadDataFromApi(api);
-
-     emptyHtmlContainers();
-
-     createContactsCards(contactsArray);
-
+        if(api.length==1){
+          openContactForm(api[0].guid);
+        }
+        else{
+          loadDataFromApi(api);
+     
+          emptyHtmlContainers();
+     
+          createContactsCards(contactsArray);
+          
+          LoadEventListeners();
+        }
     }  
    } 
 
@@ -92,17 +98,16 @@ function getContactsFromApi(id) {
 
 
 
-    //MAPPING
-    //MAPEA HTML DIV BLOCKS
-
+//MAPPING - MAPEA HTML DIV BLOCKS
 function mapHtmlOrderCards(contact) {
   let divBlock = `    
     <div>${contact.fullName}</div>    
     <div style="color: #8b64db"><strong> ${contact.idPersona}</strong></div>
+    <div style="display:none">${contact.guid}</div>
     <div class="dropdown">
     <button class="dropbtn"> <i style="color:#333" class="small material-icons">arrow_forward</i></button>
     <div class="dropdown-content">
-    <a class="customButton"> <i class="small material-icons">arrow_forward</i></a>
+      <a class="customButton"> <i class="small material-icons">arrow_forward</i></a>
     </div>
     </div>
     </div>
@@ -143,6 +148,7 @@ function createContactsCards(contact) {
   }
 }
 
+
 //Carga cards pedidos
 function loadHtmlOrdersCards(divBlock, container) {
   //Carga labels en cada order cards
@@ -158,21 +164,24 @@ function loadHtmlOrdersCards(divBlock, container) {
 
 
 
-function loadDataFromApi(contactsFromApi){    
+function loadDataFromApi(apiResults){    
   //El array de Contacts se resetea antes de cargar los datos de la API
   contactsArray = [];
-
-  contactsFromApi.forEach(c => {      
+    
+  apiResults.forEach(c => {      
       //Cargamos orden
       contactsArray.push({
           fullName : c.fullName,
-          idPersona : c.idPersona
+          idPersona : c.idPersona,
+          guid : c.guid
       });
+  
               
   });
   //Para cunado sean varias ordenes, cargamos aca una por una
   return contactsArray;
 }
+
 
 
 //CONSTRUCTORS
@@ -184,3 +193,65 @@ function Contact(fullName, idPersona, guid) {
 
   this.guid = guid;
 }
+
+
+
+
+
+
+function LoadEventListeners() {
+  //CLICK BOTON QUE CREA CASO
+  var navigateToCase = document.getElementsByClassName("customButton");
+  let j;
+  for (j = 0; j < navigateToCase.length; j++) {
+    navigateToCase[j].addEventListener("click", () => {
+      
+      let _guid = event.target.parentElement
+                            .parentElement
+                            .parentElement
+                            .previousElementSibling
+                            .innerHTML;
+         
+      openContactForm(_guid);
+    });
+  }
+}
+
+
+
+
+
+//ABRIR CONTACT CON GUID ESPECIFICO
+function openContactForm(_guid) {
+    //AppId
+    let appid = "f848d9fd-f218-ea11-a812-000d3ac1779c";
+
+    //Form ID  de Contacto "Vista 360"
+    let formid = "1066a381-5857-eb11-a812-000d3ac1b694";
+    
+    var url =`https://interbankingsadesa.crm2.dynamics.com/main.aspx
+?appid=${appid}
+&forceUCI=1
+&newWindow=false
+&pagetype=entityrecord
+&etn=contact
+&id=${_guid}
+&formid=${formid}
+`;
+    
+    window.open(url, "_self");
+      
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
